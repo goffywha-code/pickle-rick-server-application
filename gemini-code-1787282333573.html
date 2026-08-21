@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Staff Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e24;
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+        }
+        .main-form {
+            flex: 2;
+            padding: 50px;
+            overflow-y: auto;
+            max-width: none;
+        }
+        .sidebar {
+            flex: 1.5;
+            background-color: #2b2b36;
+            padding: 30px;
+            border-left: 1px solid #3d3d4d;
+            overflow-y: auto;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0 20px 0;
+            background-color: #2b2b36;
+            border: 1px solid #3d3d4d;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #5865F2;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4752C4;
+        }
+        .app-card {
+            background-color: #1e1e24;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #5865F2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-form">
+        <h2>Server Staff Application</h2>
+        <form id="applicationForm">
+            <label>Discord Username:</label>
+            <input type="text" id="username" required placeholder="e.g. goffywha">
+
+            <label>Why do you want to be staff?</label>
+            <textarea id="reason" rows="5" required placeholder="Tell us why..."></textarea>
+
+            <label>Experience:</label>
+            <textarea id="experience" rows="4" required placeholder="Any past experience?"></textarea>
+
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+
+    <div class="sidebar">
+        <h3>Live Applications Feed</h3>
+        <div id="applicationsFeed">Loading submissions...</div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiVT0tJ3yy9-1tEG9ZnCC6EawaWkRbP6U",
+            authDomain: "mod-application-database.firebaseapp.com",
+            projectId: "mod-application-database",
+            storageBucket: "mod-application-database.firebasestorage.app",
+            messagingSenderId: "676021000400",
+            appId: "1:676021000400:web:0a87bbd963da971218e6d5",
+            measurementId: "G-K4YT3ZVBJW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const form = document.getElementById('applicationForm');
+        const feed = document.getElementById('applicationsFeed');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const reason = document.getElementById('reason').value;
+            const experience = document.getElementById('experience').value;
+
+            try {
+                await addDoc(collection(db, "applications"), {
+                    username: username,
+                    reason: reason,
+                    experience: experience,
+                    timestamp: new Date()
+                });
+                alert('Application submitted successfully!');
+                form.reset();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert('Error submitting application. Check console.');
+            }
+        });
+
+        const q = query(collection(db, "applications"));
+        onSnapshot(q, (snapshot) => {
+            feed.innerHTML = '';
+            if (snapshot.empty) {
+                feed.innerHTML = '<p>No applications yet.</p>';
+                return;
+            }
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                card.innerHTML = `
+                    <strong>@${data.username}</strong>
+                    <p><b>Why:</b> ${data.reason}</p>
+                    <p><b>Experience:</b> ${data.experience}</p>
+                `;
+                feed.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
