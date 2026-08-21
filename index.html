@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rick Meeting Conference - Staff Application</title>
+    <style>
+        body { font-family: sans-serif; background-color: #1a1a2e; color: #e6e6e6; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .main-wrapper { display: flex; max-width: 1200px; width: 100%; gap: 20px; align-items: flex-start; }
+        
+        .container { flex: 2; background: #162447; padding: 30px; border-radius: 10px; border: 2px solid #e43f5a; }
+        .sidebar { flex: 1; background: #0f172a; padding: 20px; border-radius: 10px; border: 2px solid #1bc6b4; height: 800px; overflow-y: auto; box-sizing: border-box; position: sticky; top: 20px; }
+        
+        h1 { color: #e43f5a; text-align: center; margin-top: 0; }
+        .subtitle { text-align: center; color: #a4b3b6; margin-bottom: 25px; }
+        
+        label { display: block; margin-top: 18px; font-weight: bold; color: #1bc6b4; }
+        input, textarea, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: none; background: #1f4068; color: white; box-sizing: border-box; }
+        textarea { resize: vertical; height: 75px; }
+        
+        button { background: #e43f5a; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 25px; width: 100%; font-size: 18px; font-weight: bold; }
+        button:hover { background: #c2314a; }
+        
+        .disclaimer { font-size: 0.85em; color: #f0a500; margin-top: 20px; font-style: italic; background: #1f4068; padding: 10px; border-radius: 5px; }
+        
+        /* Sidebar & Beaming Light Hover Effect */
+        .channel-title { color: #1bc6b4; font-size: 18px; font-weight: bold; border-bottom: 2px solid #1f4068; padding-bottom: 8px; margin-bottom: 15px; }
+        .app-post { 
+            background: #1e293b; padding: 12px; border-radius: 6px; margin-bottom: 12px; 
+            border-left: 4px solid #e43f5a; font-size: 13px; cursor: pointer; 
+            transition: all 0.2s ease; border: 1px solid transparent; 
+        }
+        .app-post:hover { 
+            box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.9); 
+            border: 1px solid #ffffff; 
+            background: #253348; 
+        }
+        .app-user { font-weight: bold; color: #f0a500; margin-bottom: 5px; font-size: 14px; }
+        
+        /* Modal Popup for Details */
+        #modalOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #162447; border: 2px solid #1bc6b4; width: 600px; max-height: 80vh; overflow-y: auto; padding: 30px; border-radius: 10px; }
+        .qa-box { background: #1f4068; padding: 12px; border-radius: 6px; margin-bottom: 10px; }
+        .question { color: #1bc6b4; font-weight: bold; font-size: 13px; margin-bottom: 4px; }
+        .answer { color: #ffffff; font-size: 14px; word-break: break-word; }
+        .close-btn { background: #1bc6b4; color: #0f172a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; float: right; }
+        .close-btn:hover { background: #159e91; }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <!-- LEFT SIDE: The Form -->
+        <div class="container">
+            <h1>Rick Meeting Conference</h1>
+            <div class="subtitle">Official Staff Application Form — Stay in character and follow protocol!</div>
+            
+            <form id="staffForm">
+                <label>1. Discord Username / Tag:</label>
+                <input type="text" id="username" placeholder="e.g. RickSanchez#0001" required>
+
+                <label>2. What is your timezone?</label>
+                <input type="text" id="timezone" placeholder="e.g. EST, GMT, PST" required>
+
+                <label>3. How many hours can you work/dedicate per week?</label>
+                <input type="text" id="hours" placeholder="e.g. 10-15 hours" required>
+
+                <label>4. Why do you want to become staff for Rick Meeting Conference?</label>
+                <textarea id="why" required placeholder="Tell us why you'd be a good fit..."></textarea>
+
+                <label>5. Do you have any prior experience being a moderator or staff member?</label>
+                <textarea id="experience" placeholder="List any past servers or experience (optional)..."></textarea>
+
+                <label>6. How well can you stay in character according to server rules?</label>
+                <select id="character" required>
+                    <option value="">Select an option...</option>
+                    <option>I am a master at staying in character.</option>
+                    <option>I might slip up sometimes, but I'll try my best.</option>
+                    <option>What character?</option>
+                </select>
+
+                <label>7. A user starts spamming memes in general chat instead of 😭memz. What do you do?</label>
+                <textarea id="scenario1" required placeholder="Explain your step-by-step action..."></textarea>
+
+                <label>8. What is the rule regarding banning, kicking, or timing out users?</label>
+                <textarea id="scenario2" required placeholder="Where do you have to report it first?"></textarea>
+
+                <label>9. What are the consequences for a first-time rule break vs. a second-time rule break?</label>
+                <input type="text" id="scenario3" placeholder="Explain the ban progression..." required>
+
+                <label>10. If an admin, mod, or owner tells you to stop talking, what happens if you break this rule?</label>
+                <input type="text" id="scenario4" placeholder="What is the exact penalty?" required>
+
+                <label>11. Where do all official server reports go?</label>
+                <input type="text" id="scenario5" placeholder="Channel name or meeting type..." required>
+
+                <label>12. Can you handle stressful or chaotic situations without yelling or calling names?</label>
+                <select id="scenario6" required>
+                    <option value="">Select an option...</option>
+                    <option>Yes, I will keep a cool head.</option>
+                    <option>No promises if people push my buttons.</option>
+                </select>
+
+                <div class="disclaimer">
+                    <strong>⚠️ Payment Notice:</strong> Staff positions are volunteer roles. There is no real-world monetary compensation. All staff members are paid strictly using in-server currency.
+                </div>
+
+                <button type="submit">Submit Application</button>
+            </form>
+        </div>
+
+        <!-- RIGHT SIDE: The Sidebar Feed -->
+        <div class="sidebar">
+            <div class="channel-title"># 📁-applications</div>
+            <div id="feed">
+                <div class="app-post">
+                    <div class="app-user">System Bot</div>
+                    <div class="app-text" style="color:#cbd5e1;">Click any application here to view full answers!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP MODAL FOR VIEWING DETAILS -->
+    <div id="modalOverlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">✕ Back</button>
+            <h2 id="modalTitle" style="color: #e43f5a; margin-top: 0;">Application Details</h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('staffForm');
+        const feed = document.getElementById('feed');
+
+        // Local storage load
+        let applications = JSON.parse(localStorage.getItem('rickApps') || '[]');
+        renderFeed();
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const appData = {
+                username: document.getElementById('username').value,
+                timezone: document.getElementById('timezone').value,
+                hours: document.getElementById('hours').value,
+                why: document.getElementById('why').value,
+                experience: document.getElementById('experience').value,
+                character: document.getElementById('character').value,
+                scenario1: document.getElementById('scenario1').value,
+                scenario2: document.getElementById('scenario2').value,
+                scenario3: document.getElementById('scenario3').value,
+                scenario4: document.getElementById('scenario4').value,
+                scenario5: document.getElementById('scenario5').value,
+                scenario6: document.getElementById('scenario6').value,
+            };
+
+            applications.unshift(appData);
+            localStorage.setItem('rickApps', JSON.stringify(applications));
+
+            renderFeed();
+            form.reset();
+            alert('Application submitted successfully!');
+        });
+
+        function renderFeed() {
+            feed.innerHTML = '';
+            if (applications.length === 0) {
+                feed.innerHTML = '<div class="app-post"><div class="app-user">System Bot</div><div class="app-text" style="color:#cbd5e1;">No applications yet.</div></div>';
+                return;
+            }
+
+            applications.forEach((app, index) => {
+                const post = document.createElement('div');
+                post.className = 'app-post';
+                post.innerHTML = `
+                    <div class="app-user">@${app.username}</div>
+                    <div style="color: #cbd5e1; font-size: 12px;">Hours: ${app.hours}</div>
+                    <div style="color: #1bc6b4; font-size: 11px; margin-top: 4px;">👉 Click to review full application</div>
+                `;
+                post.onclick = function() {
+                    openModal(app);
+                };
+                feed.appendChild(post);
+            });
+        }
+
+        function openModal(app) {
+            document.getElementById('modalTitle').innerText = `@${app.username}'s Application`;
+            document.getElementById('modalBody').innerHTML = `
+                <div class="qa-box"><div class="question">1. Discord Username</div><div class="answer">${app.username}</div></div>
+                <div class="qa-box"><div class="question">2. Timezone</div><div class="answer">${app.timezone}</div></div>
+                <div class="qa-box"><div class="question">3. Hours per Week</div><div class="answer">${app.hours}</div></div>
+                <div class="qa-box"><div class="question">4. Why staff?</div><div class="answer">${app.why}</div></div>
+                <div class="qa-box"><div class="question">5. Prior Experience</div><div class="answer">${app.experience || 'None'}</div></div>
+                <div class="qa-box"><div class="question">6. Staying in Character</div><div class="answer">${app.character}</div></div>
+                <div class="qa-box"><div class="question">7. Meme Spam Scenario (😭memz)</div><div class="answer">${app.scenario1}</div></div>
+                <div class="qa-box"><div class="question">8. Banning/Timeout Protocol (#rickports)</div><div class="answer">${app.scenario2}</div></div>
+                <div class="qa-box"><div class="question">9. Rule Break Progression</div><div class="answer">${app.scenario3}</div></div>
+                <div class="qa-box"><div class="question">10. Talking Back Penalty</div><div class="answer">${app.scenario4}</div></div>
+                <div class="qa-box"><div class="question">11. Official Reports Destination</div><div class="answer">${app.scenario5}</div></div>
+                <div class="qa-box"><div class="question">12. Handling Stress/Chaos</div><div class="answer">${app.scenario6}</div></div>
+            `;
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
